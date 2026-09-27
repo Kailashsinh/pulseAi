@@ -1,0 +1,536 @@
+import type {
+  Anomaly,
+  AppNotification,
+  DemoUser,
+  DetectedPattern,
+  Insight,
+  MedicalReport,
+  Medication,
+  MetricSeries,
+  TimelineEvent,
+} from "./types";
+
+export const demoUser: DemoUser = {
+  name: "Aarav Sharma",
+  email: "aarav.sharma@example.com",
+  age: 28,
+  dob: "1998-04-12",
+  avatarInitials: "AS",
+  focusAreas: ["General wellness", "Metabolic health", "Heart health"],
+  goals: ["Understand my glucose pattern", "Keep resting heart rate steady"],
+};
+
+const month = (m: string, d = "10") => `2026-${m}-${d}`;
+
+export const metrics: MetricSeries[] = [
+  {
+    id: "glucose",
+    name: "Blood Glucose",
+    unit: "mg/dL",
+    baselineLow: 88,
+    baselineHigh: 104,
+    trend: "up",
+    trendNote: "Gradual upward pattern across four records",
+    points: [
+      { date: month("01", "14"), label: "Jan", value: 95 },
+      { date: month("03", "08"), label: "Mar", value: 99 },
+      { date: month("06", "02"), label: "Jun", value: 105 },
+      { date: month("09", "05"), label: "Sep", value: 111 },
+    ],
+  },
+  {
+    id: "heart-rate",
+    name: "Resting Heart Rate",
+    unit: "BPM",
+    baselineLow: 68,
+    baselineHigh: 75,
+    trend: "stable",
+    trendNote: "Within your personal baseline",
+    points: [
+      { date: month("01", "14"), label: "Jan", value: 68 },
+      { date: month("03", "08"), label: "Mar", value: 71 },
+      { date: month("06", "02"), label: "Jun", value: 70 },
+      { date: month("09", "05"), label: "Sep", value: 74 },
+    ],
+  },
+  {
+    id: "weight",
+    name: "Weight",
+    unit: "kg",
+    baselineLow: 81,
+    baselineHigh: 85,
+    trend: "down",
+    trendNote: "Gradual decrease over nine months",
+    points: [
+      { date: month("01", "14"), label: "Jan", value: 84 },
+      { date: month("03", "08"), label: "Mar", value: 83.2 },
+      { date: month("06", "02"), label: "Jun", value: 82.7 },
+      { date: month("09", "05"), label: "Sep", value: 82.1 },
+    ],
+  },
+  {
+    id: "hemoglobin",
+    name: "Hemoglobin",
+    unit: "g/dL",
+    baselineLow: 11.5,
+    baselineHigh: 13.5,
+    trend: "down",
+    trendNote: "Slight decrease worth monitoring",
+    points: [
+      { date: month("01", "14"), label: "Jan", value: 12.4 },
+      { date: month("03", "08"), label: "Mar", value: 12.0 },
+      { date: month("06", "02"), label: "Jun", value: 11.8 },
+      { date: month("09", "05"), label: "Sep", value: 11.2 },
+    ],
+  },
+  {
+    id: "sleep",
+    name: "Sleep Duration",
+    unit: "hours",
+    baselineLow: 6.5,
+    baselineHigh: 8,
+    trend: "down",
+    trendNote: "Slightly shorter nights recently",
+    points: [
+      { date: month("01", "14"), label: "Jan", value: 7.4 },
+      { date: month("03", "08"), label: "Mar", value: 7.1 },
+      { date: month("06", "02"), label: "Jun", value: 6.8 },
+      { date: month("09", "05"), label: "Sep", value: 6.4 },
+    ],
+  },
+];
+
+export const reports: MedicalReport[] = [
+  {
+    id: "rep-jan",
+    title: "Complete Blood Panel",
+    type: "Blood report",
+    date: month("01", "14"),
+    lab: "Meridian Diagnostics",
+    status: "processed",
+    pages: 3,
+    values: [
+      {
+        name: "Glucose (fasting)",
+        value: 95,
+        unit: "mg/dL",
+        reference: "70–99 mg/dL",
+        status: "within",
+      },
+      {
+        name: "Hemoglobin",
+        value: 12.4,
+        unit: "g/dL",
+        reference: "13.0–17.0 g/dL",
+        status: "below",
+      },
+      {
+        name: "Total Cholesterol",
+        value: 178,
+        unit: "mg/dL",
+        reference: "< 200 mg/dL",
+        status: "within",
+      },
+    ],
+  },
+  {
+    id: "rep-mar",
+    title: "Metabolic Screening Panel",
+    type: "Lab report",
+    date: month("03", "08"),
+    lab: "Meridian Diagnostics",
+    status: "processed",
+    pages: 2,
+    values: [
+      {
+        name: "Glucose (fasting)",
+        value: 99,
+        unit: "mg/dL",
+        reference: "70–99 mg/dL",
+        status: "within",
+      },
+      {
+        name: "Hemoglobin",
+        value: 12.0,
+        unit: "g/dL",
+        reference: "13.0–17.0 g/dL",
+        status: "below",
+      },
+      {
+        name: "HbA1c",
+        value: 5.4,
+        unit: "%",
+        reference: "< 5.7 %",
+        status: "within",
+      },
+    ],
+  },
+  {
+    id: "rep-jun",
+    title: "Routine Blood Work",
+    type: "Blood report",
+    date: month("06", "02"),
+    lab: "Northside Health Lab",
+    status: "processed",
+    pages: 4,
+    values: [
+      {
+        name: "Glucose (fasting)",
+        value: 105,
+        unit: "mg/dL",
+        reference: "70–99 mg/dL",
+        status: "above",
+      },
+      {
+        name: "Hemoglobin",
+        value: 11.8,
+        unit: "g/dL",
+        reference: "13.0–17.0 g/dL",
+        status: "below",
+      },
+      {
+        name: "HbA1c",
+        value: 5.6,
+        unit: "%",
+        reference: "< 5.7 %",
+        status: "within",
+      },
+    ],
+  },
+  {
+    id: "rep-sep",
+    title: "Follow-up Blood Panel",
+    type: "Blood report",
+    date: month("09", "05"),
+    lab: "Northside Health Lab",
+    status: "processed",
+    pages: 3,
+    values: [
+      {
+        name: "Glucose (fasting)",
+        value: 111,
+        unit: "mg/dL",
+        reference: "70–99 mg/dL",
+        status: "above",
+      },
+      {
+        name: "Hemoglobin",
+        value: 11.2,
+        unit: "g/dL",
+        reference: "13.0–17.0 g/dL",
+        status: "below",
+      },
+      {
+        name: "HbA1c",
+        value: 5.8,
+        unit: "%",
+        reference: "< 5.7 %",
+        status: "above",
+      },
+    ],
+  },
+];
+
+export const insights: Insight[] = [
+  {
+    id: "ins-1",
+    title: "Persistent upward glucose pattern",
+    description:
+      "A gradual increase was observed across your recent available records.",
+    evidence: "95 → 99 → 105 → 111 mg/dL (Jan – Sep)",
+    category: "trends",
+    severity: "moderate",
+    date: month("09", "06"),
+    reviewed: false,
+    metricId: "glucose",
+  },
+  {
+    id: "ins-2",
+    title: "Resting heart rate close to your baseline",
+    description:
+      "Recent readings stay near the range PulseAI learned from your history.",
+    evidence: "68 → 71 → 70 → 74 BPM, personal range 68–75 BPM",
+    category: "trends",
+    severity: "info",
+    date: month("09", "05"),
+    reviewed: true,
+    metricId: "heart-rate",
+  },
+  {
+    id: "ins-3",
+    title: "Hemoglobin drifting downward",
+    description:
+      "Four consecutive records show a small but consistent decrease.",
+    evidence: "12.4 → 12.0 → 11.8 → 11.2 g/dL",
+    category: "reports",
+    severity: "low",
+    date: month("09", "05"),
+    reviewed: false,
+    metricId: "hemoglobin",
+  },
+  {
+    id: "ins-4",
+    title: "One unusual heart-rate measurement",
+    description:
+      "A single reading sits clearly outside your usual personal range.",
+    evidence: "112 BPM recorded 22 Aug, usual range 68–75 BPM",
+    category: "anomalies",
+    severity: "moderate",
+    date: month("08", "22"),
+    reviewed: false,
+    metricId: "heart-rate",
+  },
+  {
+    id: "ins-5",
+    title: "Persistent cough recorded for 3 weeks",
+    description:
+      "A symptom you logged has continued across multiple check-ins.",
+    evidence: "Symptom entries on 28 Aug, 04 Sep, 12 Sep",
+    category: "symptoms",
+    severity: "moderate",
+    date: month("09", "12"),
+    reviewed: false,
+  },
+  {
+    id: "ins-6",
+    title: "Metabolic indicators worth discussing",
+    description:
+      "Combined glucose and HbA1c movement forms a pattern worth reviewing with a professional.",
+    evidence: "HbA1c 5.4 → 5.6 → 5.8 %",
+    category: "risk",
+    severity: "moderate",
+    date: month("09", "06"),
+    reviewed: false,
+    metricId: "glucose",
+  },
+];
+
+export const timeline: TimelineEvent[] = [
+  {
+    id: "tl-1",
+    date: month("01", "14"),
+    type: "report",
+    title: "Complete blood panel uploaded",
+    description: "First report added to your health history.",
+    detail:
+      "Meridian Diagnostics · 3 pages · Glucose 95 mg/dL, Hemoglobin 12.4 g/dL.",
+  },
+  {
+    id: "tl-2",
+    date: month("02", "09"),
+    type: "symptom",
+    title: "Fatigue recorded",
+    description: "Reported as mild, mostly in the afternoon.",
+    detail: "Duration 5 days · Severity 3/10 · No fever reported.",
+  },
+  {
+    id: "tl-3",
+    date: month("03", "08"),
+    type: "report",
+    title: "Metabolic screening panel uploaded",
+    description: "Second report added, values extracted successfully.",
+    detail: "Glucose 99 mg/dL · HbA1c 5.4 % · Hemoglobin 12.0 g/dL.",
+  },
+  {
+    id: "tl-4",
+    date: month("04", "18"),
+    type: "vital",
+    title: "Glucose measurement increased",
+    description: "A home measurement was higher than your previous entry.",
+    detail: "102 mg/dL recorded in the morning, fasting.",
+  },
+  {
+    id: "tl-5",
+    date: month("06", "02"),
+    type: "report",
+    title: "Routine blood work uploaded",
+    description: "Third report added to the timeline.",
+    detail: "Glucose 105 mg/dL · Hemoglobin 11.8 g/dL · HbA1c 5.6 %.",
+  },
+  {
+    id: "tl-6",
+    date: month("06", "20"),
+    type: "insight",
+    title: "Persistent trend detected",
+    description: "PulseAI noticed a continuing upward glucose pattern.",
+    detail:
+      "Three consecutive records increased. Suggested next step: discuss with a healthcare professional.",
+  },
+  {
+    id: "tl-7",
+    date: month("07", "11"),
+    type: "medication",
+    title: "Medication information added",
+    description: "Metformin 500 mg added to your medication list.",
+    detail: "Once daily, with evening meal. Added by you for tracking only.",
+  },
+  {
+    id: "tl-8",
+    date: month("08", "22"),
+    type: "vital",
+    title: "Unusual heart-rate measurement",
+    description: "112 BPM recorded, outside your usual personal range.",
+    detail: "Usual range 68–75 BPM. Recorded after reported poor sleep.",
+  },
+  {
+    id: "tl-9",
+    date: month("09", "05"),
+    type: "report",
+    title: "Follow-up blood panel uploaded",
+    description: "Fourth report added and compared with June.",
+    detail: "Glucose 111 mg/dL · Hemoglobin 11.2 g/dL · HbA1c 5.8 %.",
+  },
+  {
+    id: "tl-10",
+    date: month("09", "12"),
+    type: "assessment",
+    title: "AI-assisted assessment completed",
+    description: "Respiratory symptom conversation summarised.",
+    detail:
+      "Persistent cough for 3 weeks · Moderate indicator · Professional evaluation suggested.",
+  },
+];
+
+export const medications: Medication[] = [
+  {
+    id: "med-1",
+    name: "Metformin",
+    dosage: "500 mg",
+    frequency: "Once daily",
+    startDate: month("07", "11"),
+    notes: "Taken with the evening meal.",
+    status: "active",
+  },
+  {
+    id: "med-2",
+    name: "Vitamin D3",
+    dosage: "1000 IU",
+    frequency: "Once daily",
+    startDate: month("02", "02"),
+    notes: "Morning, after breakfast.",
+    status: "active",
+  },
+  {
+    id: "med-3",
+    name: "Cetirizine",
+    dosage: "10 mg",
+    frequency: "As needed",
+    startDate: month("08", "28"),
+    notes: "Used during seasonal symptoms.",
+    status: "paused",
+  },
+];
+
+export const notifications: AppNotification[] = [
+  {
+    id: "n-1",
+    type: "report",
+    title: "New report processed",
+    body: "Your follow-up blood panel from 5 Sep has been processed.",
+    date: month("09", "05"),
+    read: false,
+  },
+  {
+    id: "n-2",
+    type: "trend",
+    title: "Persistent trend detected",
+    body: "Review your recent glucose measurements in Analytics.",
+    date: month("09", "06"),
+    read: false,
+  },
+  {
+    id: "n-3",
+    type: "anomaly",
+    title: "Unusual measurement recorded",
+    body: "A heart-rate reading of 112 BPM is outside your usual range.",
+    date: month("08", "22"),
+    read: false,
+  },
+  {
+    id: "n-4",
+    type: "assessment",
+    title: "Assessment summary ready",
+    body: "Your respiratory symptom conversation has been summarised.",
+    date: month("09", "12"),
+    read: true,
+  },
+  {
+    id: "n-5",
+    type: "reminder",
+    title: "Appointment preparation",
+    body: "Generate a Doctor Brief before your next appointment.",
+    date: month("09", "15"),
+    read: true,
+  },
+];
+
+export const anomalies: Anomaly[] = [
+  {
+    id: "an-1",
+    metric: "Resting Heart Rate",
+    value: "112 BPM",
+    usualRange: "68–75 BPM",
+    date: month("08", "22"),
+    note: "This measurement is outside your historical range.",
+  },
+  {
+    id: "an-2",
+    metric: "Blood Glucose",
+    value: "111 mg/dL",
+    usualRange: "88–104 mg/dL",
+    date: month("09", "05"),
+    note: "Latest record sits above your personal typical range.",
+  },
+  {
+    id: "an-3",
+    metric: "Sleep Duration",
+    value: "5.2 hours",
+    usualRange: "6.5–8.0 hours",
+    date: month("08", "21"),
+    note: "Shorter than your usual nights for three days in a row.",
+  },
+];
+
+export const patterns: DetectedPattern[] = [
+  {
+    id: "p-1",
+    title: "Persistent upward glucose trend",
+    evidence: "Four consecutive records increased: 95 → 99 → 105 → 111 mg/dL",
+    range: "Jan 2026 – Sep 2026",
+    confidence: 82,
+    nextStep: "Consider discussing metabolic screening with a professional.",
+    severity: "moderate",
+  },
+  {
+    id: "p-2",
+    title: "Repeated shorter sleep nights",
+    evidence: "Sleep duration decreased from 7.4 to 6.4 hours on average",
+    range: "Mar 2026 – Sep 2026",
+    confidence: 64,
+    nextStep: "Track sleep alongside heart-rate readings for context.",
+    severity: "low",
+  },
+  {
+    id: "p-3",
+    title: "Stable resting heart-rate baseline",
+    evidence: "All but one reading stayed inside 68–75 BPM",
+    range: "Jan 2026 – Sep 2026",
+    confidence: 91,
+    nextStep: "No action suggested. Keep recording as usual.",
+    severity: "info",
+  },
+];
+
+export const correlationData = [
+  { weight: 84, glucose: 95, sleep: 7.4, hr: 68 },
+  { weight: 83.6, glucose: 97, sleep: 7.2, hr: 70 },
+  { weight: 83.2, glucose: 99, sleep: 7.1, hr: 71 },
+  { weight: 83, glucose: 102, sleep: 6.9, hr: 70 },
+  { weight: 82.7, glucose: 105, sleep: 6.8, hr: 70 },
+  { weight: 82.5, glucose: 107, sleep: 6.6, hr: 72 },
+  { weight: 82.3, glucose: 109, sleep: 6.5, hr: 73 },
+  { weight: 82.1, glucose: 111, sleep: 6.4, hr: 74 },
+];
+
+export const DISCLAIMER =
+  "PulseAI provides informational, AI-assisted health insights and is not a substitute for professional medical advice, diagnosis or treatment.";
